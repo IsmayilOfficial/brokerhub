@@ -2,6 +2,7 @@ import { ArrowLeft, ArrowUpRight, Check, ExternalLink, ShieldCheck } from 'lucid
 import { Link, useParams } from 'react-router-dom'
 import { BrokerMark } from '../components/BrokerMark.jsx'
 import { brokers } from '../data/brokers.js'
+import { SEED } from '../data/marketSeed.js'
 
 export function BrokerDetailPage() {
   const { slug } = useParams()
@@ -20,9 +21,10 @@ export function BrokerDetailPage() {
   ]
 
   return (
-    <section className="page-section detail-page">
+    <section className="page-section detail-page terminal-page">
       <div className="container">
         <Link className="back-link" to="/brokers"><ArrowLeft size={15} /> All brokers</Link>
+        <p className="simulation-disclaimer">SIMULATION — seed: 17 Nov 2026 close. Not real prices. This is not financial advice.</p>
         <div className="detail-hero">
           <div className="detail-heading">
             <BrokerMark broker={broker} large />
@@ -56,6 +58,35 @@ export function BrokerDetailPage() {
             <section className="disclosure-card"><ShieldCheck size={20} /><strong>Do your own research</strong><p>Availability, fees, and investor protections vary by country and account type. Verify details with the broker.</p><a href="https://www.investor.gov/" rel="noreferrer" target="_blank">Investor resources <ExternalLink size={13} /></a></section>
             <Link className="button button-dark full-button" to="/compare">Compare brokers <ArrowUpRight size={15} /></Link>
           </aside>
+        </div>
+        <div className="detail-columns detail-extra-columns">
+          <section className="content-card terminal-panel detail-extra-card">
+            <span className="terminal-kicker">REGIONAL CHECK / AZ</span>
+            <h2>For users in Azerbaijan</h2>
+            <p className="terminal-footnote">These are unverified sample fields, not confirmation that this provider accepts clients in Azerbaijan. Contact the broker before relying on them.</p>
+            <dl className="az-details-grid">
+              <div><dt>Opening from Azerbaijan</dt><dd>{broker.supportsAzerbaijan ? 'Sample flag: available — verify directly' : 'Not marked available in this sample — verify directly'}</dd></div>
+              <div><dt>Deposit methods</dt><dd>{broker.depositFromAzerbaijan}</dd></div>
+              <div><dt>Withdrawal methods</dt><dd>{broker.withdrawalMethods.join(', ')}</dd></div>
+              <div><dt>Minimum deposit (AZN)</dt><dd>{broker.minDepositAZN === null ? 'Not verified' : `${broker.minDepositAZN.toLocaleString('en-US')} AZN`}</dd></div>
+              <div><dt>Swap-free</dt><dd>{broker.supportsSwapFree ? 'Sample flag: offered — verify eligibility' : 'Not marked in this sample — verify directly'}</dd></div>
+            </dl>
+          </section>
+          <section className="content-card terminal-panel detail-extra-card">
+            <span className="terminal-kicker">MARKET SIMULATOR / SAMPLE SYMBOLS</span>
+            <h2>What you could trade here (Simulation)</h2>
+            <p className="terminal-footnote">Seed-price examples from our simulator only. These symbols are not confirmation of this broker&apos;s product availability.</p>
+            {broker.markets.some((market) => ['Stocks', 'Shares', 'ETFs', 'ETF'].includes(market)) ? (
+              <div className="simulated-symbol-grid">{SEED.slice(0, 6).map(([ticker, name, price]) => (
+                <Link className="simulated-symbol" key={ticker} to={`/live?ticker=${encodeURIComponent(ticker)}`}>
+                  <span><strong>{ticker}</strong><small>{name}</small></span>
+                  <span className="simulated-symbol-price">${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<small>SIMULATED SEED PRICE</small></span>
+                </Link>
+              ))}</div>
+            ) : (
+              <p className="terminal-empty-note">The current simulator seed contains US equities; no matching market examples are available for this profile yet.</p>
+            )}
+          </section>
         </div>
       </div>
     </section>

@@ -32,6 +32,9 @@ export function CompareProvider({ children }) {
       removeFromCompare(id) {
         setSelectedIds((current) => current.filter((selectedId) => selectedId !== id))
       },
+      replaceCompare(ids) {
+        setSelectedIds([...new Set(ids)].slice(0, 3))
+      },
     }),
     [selectedIds],
   )

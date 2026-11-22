@@ -1,19 +1,25 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { Footer } from './layout/Footer.jsx'
 import { Navbar } from './layout/Navbar.jsx'
 
 export function SiteLayout() {
+  const { pathname } = useLocation()
+  const terminalTheme = pathname === '/calculator'
+    || pathname === '/quiz'
+    || pathname === '/live'
+    || pathname.startsWith('/brokers/')
+
   return (
     <>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      <Navbar />
-      <div className="data-preview-note" role="status">
+      <Navbar terminalTheme={terminalTheme} />
+      <div className={`data-preview-note${terminalTheme ? ' terminal-shell' : ''}`} role="status">
         Preview data: broker details and scores are illustrative and have not been independently verified.
       </div>
-      <main id="main-content">
+      <main className={terminalTheme ? 'terminal-shell' : ''} id="main-content">
         <Outlet />
       </main>
-      <Footer />
+      <Footer terminalTheme={terminalTheme} />
     </>
   )
 }

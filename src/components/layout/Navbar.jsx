@@ -4,17 +4,20 @@ import { Link, NavLink } from 'react-router-dom'
 import { useCompare } from '../../context/useCompare.js'
 
 const links = [
+  { to: '/live', label: 'Live' },
+  { to: '/calculator', label: 'Calculator' },
+  { to: '/quiz', label: 'Quiz' },
   { to: '/brokers', label: 'Brokers' },
   { to: '/best-brokers', label: 'Best brokers' },
   { to: '/compare', label: 'Compare' },
 ]
 
-export function Navbar() {
+export function Navbar({ terminalTheme = false }) {
   const { selectedIds } = useCompare()
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header className="site-header">
+    <header className={`site-header${terminalTheme ? ' terminal-shell' : ''}`}>
       <div className="container nav-container">
         <Link className="brand" to="/" aria-label="BrokerHub home" onClick={() => setMenuOpen(false)}>
           <span className="brand-mark">B</span>
@@ -39,7 +42,7 @@ export function Navbar() {
             </NavLink>
           ))}
           <Link className="nav-cta" to="/brokers" onClick={() => setMenuOpen(false)}>
-            Explore brokers <ArrowUpRight size={15} />
+            Explore <ArrowUpRight size={15} />
           </Link>
         </nav>
       </div>

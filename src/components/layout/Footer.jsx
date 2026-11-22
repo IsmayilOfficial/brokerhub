@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 
 const currentYear = new Date().getFullYear()
 
-export function Footer() {
+export function Footer({ terminalTheme = false }) {
   return (
-    <footer className="site-footer">
+    <footer className={`site-footer${terminalTheme ? ' terminal-shell' : ''}`}>
       <div className="container footer-main">
         <div>
           <Link className="brand footer-brand" to="/">

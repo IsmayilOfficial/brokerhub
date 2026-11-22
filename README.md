@@ -21,13 +21,22 @@ src/
     useCompare.js
   data/
     brokers.js       Illustrative local broker data for the UI
+    marketSeed.js    Shared seed symbols and sector weights
   lib/
     apiClient.js     Axios client for the future API integration
+    simulator.js     Shared simulation data helpers
+    costCalculator.js
+    costCalculator.test.js
+    simulator.test.js
   pages/
     HomePage.jsx
     BrokersPage.jsx
     BrokerDetailPage.jsx
     ComparePage.jsx
+    CalculatorPage.jsx
+    QuizPage.jsx
+    LivePage.tsx
+    live.css
     RankingsPage.jsx
     NotFoundPage.jsx
   App.jsx
@@ -50,6 +59,9 @@ npm run build
 - `/brokers` — Searchable, filterable, sortable broker directory
 - `/brokers/:slug` — Broker overview and score breakdown
 - `/compare` — Compare up to three saved brokers
+- `/calculator` — Estimate yearly trading costs across sample brokers
+- `/quiz` — Create a broker shortlist from a short questionnaire
+- `/live` — SPX simulation terminal based on the supplied simulator source
 - `/best-brokers` — Broker rankings and scoring methodology
 
 Directory filters and search are synchronized with URL query parameters. The
@@ -62,6 +74,9 @@ its scores, fees, and other details are not live or independently verified.
 Replace this local source with the broker API before publishing broker claims.
 The Axios client uses `/api` by default and supports setting `VITE_API_BASE_URL`.
 No API server, Prisma schema, or database setup is included in this workspace.
+The live simulator watchlist uses the supplied `/actions` records API contract
+and is not stored in local storage. Simulator prices and scores are not real.
+Comparison state uses local storage.
 
 The ranking example applies the documented formula: trust (35%), fees (25%),
 markets (20%), support (10%), and platforms (10%).

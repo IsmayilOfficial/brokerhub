@@ -22,6 +22,10 @@ function FilterControls({ params, setParam, reset, className = '' }) {
         {regulationOptions.map((regulation) => <label className="check-option" key={regulation}><input checked={params.getAll('regulation').includes(regulation)} onChange={(event) => setParam('regulation', regulation, event.target.checked)} type="checkbox" /><span>{regulation}</span></label>)}
       </fieldset>
       <fieldset className="filter-group">
+        <legend>Availability</legend>
+        <label className="check-option"><input checked={params.get('azerbaijan') === 'true'} onChange={(event) => setParam('azerbaijan', 'true', event.target.checked)} type="checkbox" /><span>Available in Azerbaijan</span></label>
+      </fieldset>
+      <fieldset className="filter-group">
         <legend>Minimum deposit</legend>
         <label className="select-label" htmlFor={`deposit-${className || 'desktop'}`}>Maximum amount</label>
         <select id={`deposit-${className || 'desktop'}`} onChange={(event) => setParam('deposit', event.target.value)} value={params.get('deposit') || ''}>
@@ -65,6 +69,9 @@ export function BrokersPage() {
       if (checked) values.push(value)
       next.delete(key)
       values.forEach((entry) => next.append(key, entry))
+    } else if (key === 'azerbaijan') {
+      if (checked) next.set(key, value)
+      else next.delete(key)
     } else if (value) {
       next.set(key, value)
     } else {
@@ -99,6 +106,7 @@ export function BrokersPage() {
         return (!query || searchable.includes(query))
           && markets.every((market) => broker.markets.includes(market))
           && regulations.every((regulation) => broker.regulation.includes(regulation))
+          && (searchParams.get('azerbaijan') !== 'true' || broker.supportsAzerbaijan)
           && (!maxDeposit || broker.minDeposit <= Number(maxDeposit))
           && (maxDeposit !== '0' || broker.minDeposit === 0)
       })
